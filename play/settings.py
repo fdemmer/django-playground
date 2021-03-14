@@ -14,6 +14,7 @@ import os
 from distutils.util import strtobool
 
 import dj_database_url
+import structlog
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -162,3 +163,19 @@ LOGGING = {
         "level": "DEBUG",
     }
 }
+
+
+# Structlog
+# http://www.structlog.org/en/stable/configuration.html
+
+structlog.configure_once(
+    processors=[
+        structlog.stdlib.filter_by_level,
+        structlog.processors.format_exc_info,
+        structlog.stdlib.PositionalArgumentsFormatter(),
+        structlog.processors.KeyValueRenderer(sort_keys=True, key_order=['event']),
+    ],
+    logger_factory=structlog.stdlib.LoggerFactory(),
+    wrapper_class=structlog.stdlib.BoundLogger,
+    cache_logger_on_first_use=True,
+)
