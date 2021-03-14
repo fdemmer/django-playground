@@ -133,15 +133,32 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "detailed": {
+            "format": "%(asctime)s [%(process)6d:%(thread)d] %(levelname)-8s "
+                      "%(name)s %(funcName)s(%(lineno)d): %(message).4096s"
+        },
+        "simple": {
+            "format": "%(asctime)s [%(process)6d:%(thread)d] %(levelname)-8s "
+                      "%(name)s: %(message).4096s"
+        },
+    },
     "handlers": {
         "console": {
-            "level": "INFO",
+            "level": "DEBUG",
             "class": "logging.StreamHandler",
+            "formatter": "detailed",
         },
     },
     "loggers": {
         "django": {
             "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
         }
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",
     }
 }
